@@ -10,6 +10,6 @@ let bxy = newBoxy()
 null0_load(bxy)
 
 while not window.closeRequested:
-  null0_update(bxy)
+  null0_update()
   pollEvents()
   window.swapBuffers()
