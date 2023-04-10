@@ -1,4 +1,6 @@
-# this is the cart-side header for nim
+# ######################################
+# this is the cart-side header for nim #
+# ######################################
 
 import std/[macros]
 
@@ -21,5 +23,23 @@ macro null0*(t: typed): untyped =
   result.add:
     newProc
 
+# ######################################################
+# some types, consts, and helpers to make things nicer #
+# ######################################################
 
-proc log*(text: cstring) {.importc, cdecl.}
+type
+  Vec2* = array[2, int]
+
+proc vec2*(x:int, y: int):Vec2 =
+  return [x,y]
+
+const windowSize* = vec2(320, 240)
+const windowCenter* = vec2(160, 120)
+
+
+# ##################################
+# imported C API, for use in carts #
+# ##################################
+
+# similar to echo, but simpler, and works cross-host
+proc trace*(text: cstring) {.importc, cdecl.}
