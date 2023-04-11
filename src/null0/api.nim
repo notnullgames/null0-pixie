@@ -2,25 +2,18 @@ import boxy
 import wasm3
 import wasm3/wasm3c
 
-let windowSize* = ivec2(320, 240)
-var null0_frame*: int
+import ./imports
 
 var current_boxy: Boxy
+
+let windowSize* = ivec2(320, 240)
+var null0_frame*: int
 
 var null0_export_load:PFunction
 var null0_export_update:PFunction
 var null0_export_unload:PFunction
 var null0_export_buttonDown:PFunction
 var null0_export_buttonUp:PFunction
-
-var null0_images*:seq[Image]
-
-proc null0Import_trace(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc procImpl(text: cstring) =
-    echo text
-  var s = sp.stackPtrToUint()
-  callHost(procImpl, s, mem)
-
 
 
 proc null0_load*(wasmBytes:string, bxy: Boxy, debug:bool = false) =
@@ -33,12 +26,7 @@ proc null0_load*(wasmBytes:string, bxy: Boxy, debug:bool = false) =
   checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](wasmBytes[0].unsafeAddr), uint32 len(wasmBytes))
   checkWasmRes m3_LoadModule(runtime, module)
 
-  # IMPORTS
-  try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "trace", "v(*)", null0Import_trace)
-  except WasmError as e:
-    if debug:
-      echo "import trace: ", e.msg
+  null0_setup_imports(module, bxy, debug)
 
 
   # EXPORTS
@@ -67,6 +55,8 @@ proc null0_load*(wasmBytes:string, bxy: Boxy, debug:bool = false) =
   except WasmError as e:
     if debug:
       echo "export buttonUp: ", e.msg
+
+  # TODO: handle emscripten default exports and export similar in other wasm
 
   if null0_export_load != nil:
     null0_export_load.call(void)

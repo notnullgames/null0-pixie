@@ -43,3 +43,6 @@ const windowCenter* = vec2(160, 120)
 
 # similar to echo, but simpler, and works cross-host
 proc trace*(text: cstring) {.importc, cdecl.}
+
+# load a named image
+proc load_image*(name: cstring, filename: cstring = "") {.importc, cdecl.}
