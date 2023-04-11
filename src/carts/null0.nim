@@ -28,13 +28,55 @@ macro null0*(t: typed): untyped =
 # ######################################################
 
 type
-  Vec2* = array[2, int32]
+  Vec2* {.byref,packed.} = object
+    x*: int32
+    y*: int32
+
+  Color* {.byref,packed.} = object
+    b*: uint8
+    g*: uint8
+    r*: uint8
+    a*: uint8
+
+const LIGHTGRAY* = Color(r: 200, g: 200, b: 200, a: 255)
+const GRAY* = Color(r: 130, g: 130, b: 130, a: 255)
+const DARKGRAY* = Color(r: 80, g: 80, b: 80, a: 255)
+const YELLOW* = Color(r: 253, g: 249, b: 0, a: 255  )
+const GOLD* = Color(r: 255, g: 203, b: 0, a: 255  )
+const ORANGE* = Color(r: 255, g: 161, b: 0, a: 255  )
+const PINK* = Color(r: 255, g: 109, b: 194, a: 255)
+const RED* = Color(r: 230, g: 41, b: 55, a: 255)
+const MAROON* = Color(r: 190, g: 33, b: 55, a: 255)
+const GREEN* = Color(r: 0, g: 228, b: 48, a: 255)
+const LIME* = Color(r: 0, g: 158, b: 47, a: 255)
+const DARKGREEN* = Color(r: 0, g: 117, b: 44, a: 255)
+const SKYBLUE* = Color(r: 102, g: 191, b: 255, a: 255)
+const BLUE* = Color(r: 0, g: 121, b: 241, a: 255)
+const DARKBLUE* = Color(r: 0, g: 82, b: 172, a: 255)
+const PURPLE* = Color(r: 200, g: 122, b: 255, a: 255)
+const VIOLET* = Color(r: 135, g: 60, b: 190, a: 255)
+const DARKPURPLE* = Color(r: 112, g: 31, b: 126, a: 255)
+const BEIGE* = Color(r: 211, g: 176, b: 131, a: 255)
+const BROWN* = Color(r: 127, g: 106, b: 79, a: 255)
+const DARKBROWN* = Color(r: 76, g: 63, b: 47, a: 255)
+const WHITE* = Color(r: 255, g: 255, b: 255, a: 255)
+const BLACK* = Color(r: 0, g: 0, b: 0, a: 255)
+const BLANK* = Color(r: 0, g: 0, b: 0, a: 0  )
+const MAGENTA* = Color(r: 255, g: 0, b: 255, a: 255)
+const RAYWHITE* = Color(r: 245, g: 245, b: 245, a: 255)
 
 proc vec2*(x:int32, y: int32):Vec2 =
-  return [x, y]
+  return Vec2(x:x, y:y)
 
-const windowSize* = vec2(320, 240)
-const windowCenter* = vec2(160, 120)
+proc rgba(r: uint8, g: uint8, b: uint8, a: uint8): Color =
+  return Color(r:r, g:g, b:b, a:a)
+
+
+proc `-`*(a, b: Vec2): Vec2 =
+  return vec2(a.x - b.x, a.y - b.y)
+
+const windowSize* = Vec2(x:320, y:240)
+const windowCenter* = Vec2(x:160, y:120)
 
 
 # ##################################
@@ -48,12 +90,8 @@ proc trace*(text: cstring) {.importc, cdecl.}
 proc load_image*(name: cstring, filename: cstring) {.importc, cdecl.}
 
 # draw a named image
-proc draw_image*(key: cstring, posX:int32, posY:int32, angle: float32 = 0) {.importc, cdecl.}
+proc draw_image*(key: cstring, pos: Vec2, angle: float32 = 0) {.importc, cdecl.}
 
+# draw a filled-path as a new image
+proc path_filled*(key: cstring, pathString: cstring, color: Color = BLACK) {.importc, cdecl.}
 
-# ############################################
-# wrappers around C API to make things nicer #
-# ############################################
-
-proc draw_image*(key: cstring, pos: Vec2, angle: float32 = 0) =
-  draw_image(key, pos[0], pos[1], angle)

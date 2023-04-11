@@ -3,6 +3,27 @@ import wasm3
 import wasm3/wasm3c
 import ../physfs
 
+type
+  WasmVect2 {.byref,packed.} = object
+    x: int32
+    y: int32
+
+  WasmColor {.byref,packed.} = object
+    b: uint8
+    g: uint8
+    r: uint8
+    a: uint8
+
+proc fromWasm*(result: var WasmVect2, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  result = cast[ptr WasmVect2](cast[uint64](mem) + i)[]
+
+proc fromWasm*(result: var WasmColor, sp: var uint64, mem: pointer) =
+  var i: uint32
+  i.fromWasm(sp, mem)
+  result = cast[ptr WasmColor](cast[uint64](mem) + i)[]
+
 const fontDefault = staticRead("../../font_default.png")
 
 var current_boxy: Boxy
@@ -23,11 +44,18 @@ proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint
   callHost(procImpl, s, mem)
 
 proc null0Import_draw_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc procImpl(key: cstring, posX:int32, posY:int32, angle: float32) =
-    if angle == 0:
-      current_boxy.drawImage($key, vec2(float posX, float posY))
-    else:
-      current_boxy.drawImage($key, vec2(float posX, float posY), angle)
+  proc procImpl(key: cstring, pos:WasmVect2, angle: float32) =
+    current_boxy.drawImage($key, vec2(float pos.x, float pos.y), angle)
+  var s = sp.stackPtrToUint()
+  callHost(procImpl, s, mem)
+
+proc null0Import_path_filled(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(key: cstring, pathString: cstring, color: WasmColor) =
+    let path = parsePath($pathString)
+    let bounds = computeBounds(path)
+    let image = newImage(int bounds.w + bounds.x, int bounds.h + bounds.y)
+    image.fillPath(path, rgba(color.r, color.g, color.b, color.a))
+    current_boxy.addImage($key, image)
   var s = sp.stackPtrToUint()
   callHost(procImpl, s, mem)
 
@@ -49,7 +77,13 @@ proc null0_setup_imports*(module: PModule, debug: bool, bxy: Boxy) =
       echo "import load_image: ", e.msg
 
   try:
-    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(*iif)", null0Import_draw_image)
+    checkWasmRes m3_LinkRawFunction(module, "*", "draw_image", "v(**f)", null0Import_draw_image)
   except WasmError as e:
     if debug:
       echo "import draw_image: ", e.msg
+
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "path_filled", "v(***)", null0Import_path_filled)
+  except WasmError as e:
+    if debug:
+      echo "import path_filled: ", e.msg
