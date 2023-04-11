@@ -7,7 +7,7 @@ loadExtensions()
 
 let bxy = newBoxy()
 
-null0_load(readFile("justlog.wasm"), bxy, true)
+null0_load(readFile("draw.null0"), bxy, true)
 
 while not window.closeRequested:
   null0_update()
