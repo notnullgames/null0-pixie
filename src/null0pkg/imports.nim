@@ -11,10 +11,11 @@ proc null0Import_trace(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; m
   callHost(procImpl, s, mem)
 
 proc null0Import_load_image(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
-  proc procImpl(name: cstring, filename: cstring) =
-    echo "load_image: " & $name & ", " & $filename
+  proc procImpl(key: cstring, filename: cstring) =
+    echo "load_image: " & $key & ", " & $filename
   var s = sp.stackPtrToUint()
   callHost(procImpl, s, mem)
+
 
 
 proc null0_setup_imports*(module: PModule, bxy: Boxy, debug: bool = false) =

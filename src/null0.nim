@@ -1,5 +1,5 @@
 import boxy, opengl, windy
-import null0/api
+import null0pkg/api
 
 let window = newWindow("null0", windowSize)
 makeContextCurrent(window)
