@@ -4,5 +4,10 @@ proc load*() {.null0.} =
   load_image("ring2", "assets/ring2.png")
   load_image("ring3", "assets/ring3.png")
 
+proc update*(frame: int) {.null0.} =
+  draw_image("ring1", windowCenter, float(frame) / 100)
+  draw_image("ring2", windowCenter, -float(frame) / 190)
+  draw_image("ring3", windowCenter, float(frame) / 170)
+
 proc unload*() {.null0.} =
   trace("Ok, bye.")

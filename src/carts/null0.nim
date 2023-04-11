@@ -28,10 +28,10 @@ macro null0*(t: typed): untyped =
 # ######################################################
 
 type
-  Vec2* = array[2, int]
+  Vec2* = array[2, int32]
 
-proc vec2*(x:int, y: int):Vec2 =
-  return [x,y]
+proc vec2*(x:int32, y: int32):Vec2 =
+  return [x, y]
 
 const windowSize* = vec2(320, 240)
 const windowCenter* = vec2(160, 120)
@@ -46,3 +46,14 @@ proc trace*(text: cstring) {.importc, cdecl.}
 
 # load a named image
 proc load_image*(name: cstring, filename: cstring) {.importc, cdecl.}
+
+# draw a named image
+proc draw_image*(key: cstring, posX:int32, posY:int32, angle: float32 = 0) {.importc, cdecl.}
+
+
+# ############################################
+# wrappers around C API to make things nicer #
+# ############################################
+
+proc draw_image*(key: cstring, pos: Vec2, angle: float32 = 0) =
+  draw_image(key, pos[0], pos[1], angle)
