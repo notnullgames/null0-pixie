@@ -10,7 +10,7 @@ let bxy = newBoxy()
 null0_load(readFile("draw.null0"), bxy, true)
 
 while not window.closeRequested:
-  null0_update()
+  null0_update(window.size)
   pollEvents()
   window.swapBuffers()
 

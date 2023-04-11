@@ -81,8 +81,8 @@ proc null0_unload*() =
   discard physfs.deinit()
 
 
-proc null0_update*() =
-  current_boxy.beginFrame(windowSize)
+proc null0_update*(size:IVec2) =
+  current_boxy.beginFrame(size)
   
   if null0_export_update != nil:
     null0_export_update.call(void, null0_frame)
