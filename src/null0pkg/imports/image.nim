@@ -59,6 +59,16 @@ proc null0Import_path_filled(runtime: PRuntime; ctx: PImportContext; sp: ptr uin
   var s = sp.stackPtrToUint()
   callHost(procImpl, s, mem)
 
+proc null0Import_path_stroked(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(key: cstring, pathString: cstring, color: WasmColor, strokeWidth: float32) =
+    let path = parsePath($pathString)
+    let bounds = computeBounds(path)
+    let image = newImage(int bounds.w + bounds.x + (strokeWidth * 2), int bounds.h + bounds.y + (strokeWidth * 2))
+    image.strokePath(path, rgba(color.r, color.g, color.b, color.a), mat3(), strokeWidth)
+    current_boxy.addImage($key, image)
+  var s = sp.stackPtrToUint()
+  callHost(procImpl, s, mem)
+
 
 proc null0_setup_imports*(module: PModule, debug: bool, bxy: Boxy) =
   current_boxy = bxy
@@ -84,6 +94,12 @@ proc null0_setup_imports*(module: PModule, debug: bool, bxy: Boxy) =
 
   try:
     checkWasmRes m3_LinkRawFunction(module, "*", "path_filled", "v(***)", null0Import_path_filled)
+  except WasmError as e:
+    if debug:
+      echo "import path_filled: ", e.msg
+
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "path_stroked", "v(***f)", null0Import_path_stroked)
   except WasmError as e:
     if debug:
       echo "import path_filled: ", e.msg

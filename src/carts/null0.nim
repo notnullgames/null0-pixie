@@ -75,6 +75,15 @@ proc rgba(r: uint8, g: uint8, b: uint8, a: uint8): Color =
 proc `-`*(a, b: Vec2): Vec2 =
   return vec2(a.x - b.x, a.y - b.y)
 
+proc `+`*(a, b: Vec2): Vec2 =
+  return vec2(a.x + b.x, a.y + b.y)
+
+proc `*`*(a, b: Vec2): Vec2 =
+  return vec2(a.x * b.x, a.y * b.y)
+
+proc `/`*(a, b: Vec2): Vec2 =
+  return vec2(int32 a.x / b.x, int32 a.y / b.y)
+
 const windowSize* = Vec2(x:320, y:240)
 const windowCenter* = Vec2(x:160, y:120)
 
@@ -92,6 +101,8 @@ proc load_image*(name: cstring, filename: cstring) {.importc, cdecl.}
 # draw a named image
 proc draw_image*(key: cstring, pos: Vec2, angle: float32 = 0) {.importc, cdecl.}
 
-# draw a filled-path as a new image
+# draw a filled path as a new image
 proc path_filled*(key: cstring, pathString: cstring, color: Color = BLACK) {.importc, cdecl.}
 
+# draw an outlined path as a new image
+proc path_stroked*(key: cstring, pathString: cstring, color: Color = BLACK, strokeWidth: float32) {.importc, cdecl.}
