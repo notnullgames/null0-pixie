@@ -82,24 +82,17 @@ proc null0_load*(cartBytes:string, bxy: Boxy, debug:bool = false) =
   null0_setup_imports(module, debug)
   null0_setup_exports(runtime, debug)
   
-
   # TODO: handle emscripten default exports and export similar in other wasm
 
   if null0_export_load != nil:
     null0_export_load.call(void)
-
 
 proc null0_unload*() =
   if null0_export_unload != nil:
     null0_export_unload.call(void)
   discard physfs.deinit()
 
-
-proc null0_update*(size:IVec2) =
-  current_boxy.beginFrame(size)
-  
+proc null0_update*() =
   if null0_export_update != nil:
     null0_export_update.call(void, null0_frame)
-
-  current_boxy.endFrame()
   inc null0_frame
