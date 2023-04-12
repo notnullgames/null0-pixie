@@ -17,6 +17,11 @@ var null0_export_unload:PFunction
 var null0_export_buttonDown:PFunction
 var null0_export_buttonUp:PFunction
 
+proc null0Import_trace(runtime: PRuntime; ctx: PImportContext; sp: ptr uint64; mem: pointer): pointer {.cdecl.} =
+  proc procImpl(text: cstring) =
+    echo text
+  var s = sp.stackPtrToUint()
+  callHost(procImpl, s, mem)
 
 proc null0_setup_exports(runtime: PRuntime, debug:bool = false) =
   try:
@@ -45,6 +50,15 @@ proc null0_setup_exports(runtime: PRuntime, debug:bool = false) =
     if debug:
       echo "export buttonUp: ", e.msg
 
+proc null0_setup_imports(module: PModule, debug: bool = false) =
+  try:
+    checkWasmRes m3_LinkRawFunction(module, "*", "trace", "v(*)", null0Import_trace)
+  except WasmError as e:
+    if debug:
+      echo "import trace: ", e.msg
+  null0_setup_imports(module, debug, current_boxy)
+
+
 proc null0_load*(cartBytes:string, bxy: Boxy, debug:bool = false) =
   current_boxy = bxy
 
@@ -65,7 +79,7 @@ proc null0_load*(cartBytes:string, bxy: Boxy, debug:bool = false) =
   checkWasmRes m3_ParseModule(env, module.addr, cast[ptr uint8](unsafeAddr wasmBytes[0]), uint32 len(wasmBytes))
   checkWasmRes m3_LoadModule(runtime, module)
 
-  null0_setup_imports(module, debug, bxy)
+  null0_setup_imports(module, debug)
   null0_setup_exports(runtime, debug)
   
 
