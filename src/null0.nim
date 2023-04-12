@@ -8,12 +8,17 @@ null0 - Runtime for null0 game-engine
 Usage:
   null0 --help
   null0 <cart>
+  null0 -v <cart>
 
 <cart>   Specify the cart-name (wasm file or zip/directory with main.wasm in it)
 
 Options:
-  -h --help               Show this screen. 
+  -h --help               Show this screen.
+  -v --verbose            Enable debugging text
 """
+
+let args = docopt(doc, version = "0.0.1")
+let cart = $args["<cart>"]
 
 let window = newWindow("null0", windowSize)
 makeContextCurrent(window)
@@ -27,10 +32,7 @@ var offset = vec2(0, 0)
 var fX:float
 var fY:float
 
-let args = docopt(doc, version = "0.0.1")
-let cart = $args["<cart>"]
-
-null0_load(readFile(cart), bxy, true)
+null0_load(readFile(cart), bxy, args["--verbose"])
 
 window.onFrame = proc() =
   fX = float(window.size.x)
