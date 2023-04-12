@@ -3,7 +3,7 @@
 import unittest
 import boxy
 
-import null0/api
+import null0pkg/api
 
 test "exports windowSize":
   check windowSize == ivec2(320, 240)

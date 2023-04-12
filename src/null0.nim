@@ -1,5 +1,19 @@
 import boxy, opengl, windy
 import null0pkg/api
+import docopt
+
+const doc = """
+null0 - Runtime for null0 game-engine
+
+Usage:
+  null0 --help
+  null0 <cart>
+
+<cart>   Specify the cart-name (wasm file or zip/directory with main.wasm in it)
+
+Options:
+  -h --help               Show this screen. 
+"""
 
 let window = newWindow("null0", windowSize)
 makeContextCurrent(window)
@@ -13,7 +27,10 @@ var offset = vec2(0, 0)
 var fX:float
 var fY:float
 
-null0_load(readFile("draw.null0"), bxy, true)
+let args = docopt(doc, version = "0.0.1")
+let cart = $args["<cart>"]
+
+null0_load(readFile(cart), bxy, true)
 
 window.onFrame = proc() =
   fX = float(window.size.x)

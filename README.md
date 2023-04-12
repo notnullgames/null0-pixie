@@ -4,12 +4,15 @@ All the demo-carts in this repo are written in nim for faster testing, but you c
 
 
 ```
-# build runtime, then run it
-nimble run
-
-# run unit-tests
-nimble test
+# compile draw cart
+nimble cart draw
 
 # compile justlog cart
 nimble cart justlog
+
+# build runtime, then run it on draw.null0
+nimble run -- draw.null0
+
+# run unit-tests
+nimble test
 ```
