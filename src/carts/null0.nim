@@ -102,7 +102,7 @@ proc load_image*(name: cstring, filename: cstring) {.importc, cdecl.}
 proc draw_image*(key: cstring, pos: Vec2, angle: float32 = 0) {.importc, cdecl.}
 
 # draw a filled path as a new image
-proc path_filled*(key: cstring, pathString: cstring, color: Color = BLACK) {.importc, cdecl.}
+proc path_filled*(key: cstring, pathString: cstring, color: Color = BLACK, size: Vec2 = vec2(0,0)) {.importc, cdecl.}
 
 # draw an outlined path as a new image
-proc path_stroked*(key: cstring, pathString: cstring, color: Color = BLACK, strokeWidth: float32) {.importc, cdecl.}
+proc path_stroked*(key: cstring, pathString: cstring, color: Color = BLACK, strokeWidth: float32, size: Vec2 = vec2(0,0)) {.importc, cdecl.}

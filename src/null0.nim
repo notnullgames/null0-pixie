@@ -29,21 +29,20 @@ let bxy = newBoxy()
 let ratio = windowSize.x / windowSize.y
 var scale = 1.0
 var offset = vec2(0, 0)
-var fX:float
-var fY:float
+var vs:Vec2
+let ws = windowSize.vec2
 
 null0_load(readFile(cart), bxy, args["--verbose"])
 
 window.onFrame = proc() =
-  fX = float(window.size.x)
-  fY = float(window.size.y)
-  if float(window.size.x) > (fY * ratio):
-    scale = window.size.y / windowSize.y
-    offset.x = (fX - (float(windowSize.x) * scale)) / 2
+  vs = window.size.vec2
+  if vs.x > (vs.y * ratio):
+    scale = vs.y / ws.y
+    offset.x = (vs.x - (ws.x * scale)) / 2
     offset.y = 0
   else:
-    scale = window.size.x / windowSize.x
-    offset.y = (fY - (float(windowSize.y) * scale)) / 2
+    scale = vs.x / ws.x
+    offset.y = (vs.y - (ws.y * scale)) / 2
     offset.x = 0
 
   bxy.beginFrame(window.size)

@@ -17,7 +17,7 @@ proc load*() {.null0.} =
 
 proc update*(frame: int) {.null0.} =
   draw_image("heart", windowCenter)
-  draw_image("heart_outline", windowCenter + vec2(1, 1))
+  draw_image("heart_outline", windowCenter + vec2(2, 1))
   draw_image("ring1", windowCenter, float(frame) / 100)
   draw_image("ring2", windowCenter, -float(frame) / 190)
   draw_image("ring3", windowCenter, float(frame) / 170)
