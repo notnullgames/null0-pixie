@@ -1,3 +1,6 @@
 [submodule "vendor/physfs"]
 	path = vendor/physfs
 	url = https://github.com/icculus/physfs.git
+[submodule "vendor/gamepad"]
+	path = vendor/gamepad
+	url = https://github.com/ThemsAllTook/libstem_gamepad.git

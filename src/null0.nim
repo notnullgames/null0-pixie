@@ -1,6 +1,7 @@
 import boxy, opengl, windy
 import null0pkg/api
 import docopt
+import null0pkg/gamepad
 
 const doc = """
 null0 - Runtime for null0 game-engine
@@ -32,6 +33,33 @@ var offset = vec2(0, 0)
 var vs:Vec2
 let ws = windowSize.vec2
 
+proc onGamepadAttached(device: ptr Gamepad_device; context: pointer) =
+  var js = device[]
+  echo "attached: " & $js.deviceID
+
+proc onGamepadRemoved(device: ptr Gamepad_device; context: pointer) =
+  var js = device[]
+  echo "removed: " & $js.deviceID
+
+proc onButtonDown (device: ptr Gamepad_device; buttonID: cuint; timestamp: cdouble; context: pointer) =
+  var js = device[]
+  echo "buttonDown(" & $js.deviceID & "): " & $buttonID
+
+proc onButtonUp (device: ptr Gamepad_device; buttonID: cuint; timestamp: cdouble; context: pointer) =
+  var js = device[]
+  echo "buttonUp(" & $js.deviceID & "): " & $buttonID
+
+proc onAxisMoved (device: ptr Gamepad_device; axisID: cuint; value: cfloat; lastValue: cfloat; timestamp: cdouble; context: pointer) =
+  var js = device[]
+  echo "axis(" & $js.deviceID & "): " & $axisID & " : " & $value
+
+const GAMEPAD_POLL_ITERATION_INTERVAL=30
+gamepad.deviceAttachFunc(onGamepadAttached, nil)
+gamepad.deviceRemoveFunc(onGamepadRemoved, nil)
+gamepad.buttonDownFunc(onButtonDown, nil)
+gamepad.buttonUpFunc(onButtonUp, nil)
+gamepad.axisMoveFunc(onAxisMoved, nil)
+gamepad.init()
 null0_load(readFile(cart), bxy, args["--verbose"])
 
 window.onFrame = proc() =
@@ -54,8 +82,13 @@ window.onFrame = proc() =
   bxy.endFrame()
   window.swapBuffers()
 
+var iterationsToNextPoll = GAMEPAD_POLL_ITERATION_INTERVAL
 while not window.closeRequested:
   pollEvents()
-  
+  dec iterationsToNextPoll
+  if iterationsToNextPoll == 0:
+    gamepad.detectDevices()
+    iterationsToNextPoll = GAMEPAD_POLL_ITERATION_INTERVAL
+  gamepad.processEvents();
 
 null0_unload()
