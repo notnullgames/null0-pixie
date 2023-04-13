@@ -36,9 +36,9 @@ proc numDevices*(): cuint
 proc deviceAtIndex*(deviceIndex: cuint): ptr Gamepad_device
 proc detectDevices*()
 proc processEvents*()
-proc deviceAttachFunc*(callback: cbAttach; context: pointer)
-proc deviceRemoveFunc*(callback: cbAttach; context: pointer)
-proc buttonDownFunc*(callback: cbButton; context: pointer)
-proc buttonUpFunc*(callback: cbButton; context: pointer)
-proc axisMoveFunc*(callback: cbAxis; context: pointer)
+proc deviceAttachFunc*(callback: cbAttach; context: pointer = nil)
+proc deviceRemoveFunc*(callback: cbAttach; context: pointer = nil)
+proc buttonDownFunc*(callback: cbButton; context: pointer = nil)
+proc buttonUpFunc*(callback: cbButton; context: pointer = nil)
+proc axisMoveFunc*(callback: cbAxis; context: pointer = nil)
 {.pop.}

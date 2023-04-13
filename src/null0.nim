@@ -54,11 +54,11 @@ proc onAxisMoved (device: ptr Gamepad_device; axisID: cuint; value: cfloat; last
   echo "axis(" & $js.deviceID & "): " & $axisID & " : " & $value
 
 const GAMEPAD_POLL_ITERATION_INTERVAL=30
-gamepad.deviceAttachFunc(onGamepadAttached, nil)
-gamepad.deviceRemoveFunc(onGamepadRemoved, nil)
-gamepad.buttonDownFunc(onButtonDown, nil)
-gamepad.buttonUpFunc(onButtonUp, nil)
-gamepad.axisMoveFunc(onAxisMoved, nil)
+gamepad.deviceAttachFunc(onGamepadAttached)
+gamepad.deviceRemoveFunc(onGamepadRemoved)
+gamepad.buttonDownFunc(onButtonDown)
+gamepad.buttonUpFunc(onButtonUp)
+gamepad.axisMoveFunc(onAxisMoved)
 gamepad.init()
 null0_load(readFile(cart), bxy, args["--verbose"])
 
