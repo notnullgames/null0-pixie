@@ -3,6 +3,8 @@ import wasm3
 import wasm3/wasm3c
 import ../physfs
 
+const fontDefault = staticRead("../../font_default.png")
+
 type
   WasmVect2 {.byref,packed.} = object
     x: int32
@@ -29,8 +31,6 @@ proc vec2(i: WasmVect2): Vec2 =
 
 proc rgba(i: WasmColor): ColorRGBA =
   return rgba(i.r, i.g, i.b, i.a)
-
-const fontDefault = staticRead("../../font_default.png")
 
 var current_boxy: Boxy
 

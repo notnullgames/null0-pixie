@@ -13,6 +13,4 @@ nimble cart justlog
 # build runtime, then run it on draw.null0
 nimble run -- draw.null0
 
-# run unit-tests
-nimble test
 ```
