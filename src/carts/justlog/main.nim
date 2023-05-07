@@ -1,5 +1,5 @@
-proc load*() {.null0.} =
+load:
   trace("Hello from justlog.")
 
-proc unload*() {.null0.} =
+unload:
   trace("Ok, bye.")

@@ -84,9 +84,27 @@ proc `*`*(a, b: Vec2): Vec2 =
 proc `/`*(a, b: Vec2): Vec2 =
   return vec2(int32 a.x / b.x, int32 a.y / b.y)
 
-const windowSize* = Vec2(x:320, y:240)
-const windowCenter* = Vec2(x:160, y:120)
+# You can use these tempalates instead of exposing procs
 
+template load*(body: untyped) {.dirty.} =
+  proc load {.null0.} =
+    body
+
+template unload*(body: untyped) {.dirty.} =
+  proc unload {.null0.} =
+    body
+
+template update*(body: untyped) {.dirty.} =
+  proc update*(frame: int) {.null0.} =
+    body
+
+template buttonDown*(body: untyped) {.dirty.} =
+  proc buttonDown(button: Button) {.null0.} =
+   body
+
+template buttonUp*(body: untyped) {.dirty.} =
+  proc buttonUp(button: Button) {.null0.} =
+   body
 
 # ##################################
 # imported C API, for use in carts #

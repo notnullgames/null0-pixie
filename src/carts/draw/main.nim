@@ -7,7 +7,9 @@ let heart = cstring """
   z
 """
 
-proc load*() {.null0.} =
+const windowCenter = Vec2(x:160, y:120)
+
+load:
   trace("Hello from draw.")
   load_image("ring1", "assets/ring1.png")
   load_image("ring2", "assets/ring2.png")
@@ -15,12 +17,12 @@ proc load*() {.null0.} =
   path_filled("heart", heart, PINK)
   path_stroked("heart_outline", heart, WHITE, 2.0)
 
-proc update*(frame: int) {.null0.} =
+update:
   draw_image("heart", windowCenter)
   draw_image("heart_outline", windowCenter + vec2(2, 1))
   draw_image("ring1", windowCenter, float(frame) / 100)
   draw_image("ring2", windowCenter, -float(frame) / 190)
   draw_image("ring3", windowCenter, float(frame) / 170)
 
-proc unload*() {.null0.} =
+unload:
   trace("Ok, bye.")
