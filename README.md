@@ -4,6 +4,11 @@ All the demo-carts in this repo are written in nim for faster testing, but you c
 
 
 ```
+# get this repo and it's submodules
+git clone --recursive git@github.com:notnullgames/null0-pixie.git
+cd null0-pixie
+
+
 # compile draw cart
 nimble cart draw
 
